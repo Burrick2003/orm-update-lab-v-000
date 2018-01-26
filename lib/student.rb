@@ -4,6 +4,17 @@ class Student
 
   attr_accessor :id, :name, :grade
 
+  def self.find_or_create_by(name:, breed:)
+      song = DB[:conn].execute("SELECT * FROM songs WHERE name = ? AND album = ?", name, album)
+      if !song.empty?
+        song_data = song[0]
+        song = Song.new(song_data[0], song_data[1], song_data[2])
+      else
+        song = self.create(name: name, album: album)
+      end
+      song
+    end 
+
   def update
     sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
     DB[:conn].execute(sql, self.name, self.grade, self.id)
